@@ -1,0 +1,22 @@
+[Unit]
+Description=letsencrypt proxy companion
+Requires={{ docker_proxy_service_name }}.service
+After={{ docker_proxy_service_name }}.service
+
+[Service]
+{% if docker_proxy_service_user is defined %}
+User={{ docker_proxy_service_user }}
+{% endif %}
+Restart=on-failure
+RestartSec=10
+ExecStartPre=-/usr/bin/docker kill {{ docker_letsencrypt_companion_container_name }}
+ExecStartPre=-/usr/bin/docker rm {{ docker_letsencrypt_companion_container_name }}
+ExecStart=/usr/bin/docker run \
+    -v {{ docker_proxy_certs_dir_path }}:/etc/nginx/certs:rw \
+    -v {{ docker_proxy_socket_path | default('/var/run/docker.sock') }}:/var/run/docker.sock:ro \
+    --volumes-from {{ docker_proxy_container_name }} \
+    --name={{ docker_letsencrypt_companion_container_name }} jrcs/letsencrypt-nginx-proxy-companion
+ExecStop=-/usr/bin/docker stop -t 2 {{ docker_letsencrypt_companion_container_name }}
+
+[Install]
+WantedBy=multi-user.target

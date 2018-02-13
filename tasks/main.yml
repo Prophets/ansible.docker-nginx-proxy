@@ -1,0 +1,33 @@
+---
+# tasks file for prophets.docker-proxy
+- name: Create proxy wide configuration file.
+  template:
+    src: proxy-wide-conf.j2
+    dest: "{{ docker_proxy_wide_config_path }}"
+  when: docker_proxy_wide_config is defined and docker_proxy_wide_config != false
+
+- name: Create nginx-proxy service unit file.
+  template:
+    src: nginx-proxy.j2
+    dest: "{{ docker_proxy_service_systemd }}/{{ docker_proxy_service_name }}.service"
+
+- name: Enable nginx service and reload.
+  systemd:
+    name: "{{ docker_proxy_service_name }}"
+    daemon_reload: yes
+    enabled: yes
+    state: restarted
+
+- name: Create letsencrypt companion service unit file.
+  template:
+    src: letsencrypt-proxy-companion.j2
+    dest: "{{ docker_proxy_service_systemd }}/{{ docker_letsencrypt_companion_service_name }}.service"
+  when: docker_use_letsencrypt_companion|bool == true
+
+- name: Enable letsencrypt service and reload.
+  systemd:
+    name: "{{ docker_letsencrypt_companion_service_name }}"
+    daemon_reload: yes
+    enabled: yes
+    state: restarted
+  when: docker_use_letsencrypt_companion|bool == true

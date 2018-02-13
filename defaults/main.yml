@@ -1,0 +1,15 @@
+---
+# defaults file for prophets.docker-proxy
+docker_proxy_container_name: nginx_proxy
+docker_proxy_wide_config_path: /usr/local/etc/nginx_proxy_wide.conf
+docker_proxy_wide_config: ""
+# docker_proxy_htpasswd_dir_path: /usr/local/etc/nginx_proxy/htpasswd
+docker_proxy_certs_dir_path: /usr/local/etc/nginx_proxy/certs
+# docker_proxy_vhosts_dir_path: /usr/local/etc/nginx_proxy/vhosts
+docker_use_letsencrypt_companion: yes
+docker_letsencrypt_companion_container_name: letsencrypt_proxy_companion
+
+# Systemd service unit names
+docker_proxy_service_systemd: /etc/systemd/system
+docker_proxy_service_name: nginx_proxy
+docker_letsencrypt_companion_service_name: letsencrypt_proxy_companion
