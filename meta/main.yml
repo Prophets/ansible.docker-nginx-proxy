@@ -6,8 +6,10 @@ galaxy_info:
   description: Systemd service for jwilder/nginx docker and optional docker-letsencrypt-nginx-proxy-companion container.
   license: "license (BSD, MIT)"
   min_ansible_version: 2.0
+  platforms:
+    - name: Ubuntu
   galaxy_tags:
-    - nginx proxy
+    - nginx
     - proxy
     - docker
-    - jwilder/nginx
+    - jwilder
