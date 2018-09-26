@@ -21,10 +21,12 @@ ExecStart=/usr/bin/docker run \
   -v {{ docker_proxy_certs_dir_path }}:/etc/nginx/certs:ro \
 {% endif %}
 {% if docker_proxy_vhosts_dir_path is defined %}
-  -v {{ docker_proxy_vhosts_dir_path }}:/etc/nginx/vhosts.d:ro \
-{% endif %}
+  -v {{ docker_proxy_vhosts_dir_path }}:/etc/nginx/vhost.d:ro \
 {% if docker_use_letsencrypt_companion == true %}
   -v /etc/nginx/vhost.d \
+{% endif %}
+{% endif %}
+{% if docker_use_letsencrypt_companion == true %}
   -v /usr/share/nginx/html \
 {% endif %}
   -p 80:80 \

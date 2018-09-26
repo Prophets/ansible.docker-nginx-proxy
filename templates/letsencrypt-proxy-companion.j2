@@ -13,6 +13,9 @@ ExecStartPre=-/usr/bin/docker kill {{ docker_letsencrypt_companion_container_nam
 ExecStartPre=-/usr/bin/docker rm {{ docker_letsencrypt_companion_container_name }}
 ExecStart=/usr/bin/docker run \
     -v {{ docker_proxy_certs_dir_path }}:/etc/nginx/certs:rw \
+{% if docker_proxy_vhosts_dir_path is defined %}
+    -v {{ docker_proxy_vhosts_dir_path }}:/etc/nginx/vhost.d:rw \
+{% endif %}
     -v {{ docker_proxy_socket_path | default('/var/run/docker.sock') }}:/var/run/docker.sock:ro \
     --volumes-from {{ docker_proxy_container_name }} \
     --name={{ docker_letsencrypt_companion_container_name }} jrcs/letsencrypt-nginx-proxy-companion
